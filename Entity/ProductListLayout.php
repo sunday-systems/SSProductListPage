@@ -251,9 +251,9 @@ class ProductListLayout extends \Eccube\Entity\AbstractEntity
     private $metaTags;
 
     /**
-     * @var \Eccube\Entity\Product
+     * @var \Eccube\Entity\Category
      */
-    private $Product;
+    private $Category;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -550,26 +550,26 @@ class ProductListLayout extends \Eccube\Entity\AbstractEntity
     }
 
     /**
-     * Set Product
+     * Set Category
      *
-     * @param \Eccube\Entity\Product $product
+     * @param \Eccube\Entity\Category $category
      * @return ProductListLayout
      */
-    public function setProduct(\Eccube\Entity\Product $product = null)
+    public function setCategory(\Eccube\Entity\Category $category = null)
     {
-        $this->Product = $product;
+        $this->Category = $category;
 
         return $this;
     }
 
     /**
-     * Get Product
+     * Get Category
      *
-     * @return \Eccube\Entity\Product 
+     * @return \Eccube\Entity\Category 
      */
-    public function getProduct()
+    public function getCategory()
     {
-        return $this->Product;
+        return $this->Category;
     }
 
     /**

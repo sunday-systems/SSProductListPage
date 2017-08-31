@@ -2,10 +2,6 @@ Plugin\SSProductListPage\Entity\ProductListLayout:
     type: entity
     table: plg_ss_product_list_layout
     repositoryClass: Plugin\SSProductListPage\Repository\ProductListLayoutRepository
-    indexes:
-        IDX_F44F6270C4663E4:
-            columns:
-                - page_id
     id:
         page_id:
             type: integer
@@ -73,12 +69,12 @@ Plugin\SSProductListPage\Entity\ProductListLayout:
             fixed: false
             column: meta_tags
     oneToOne: 
-        Product: 
-            targetEntity: Eccube\Entity\Product
+        Category: 
+            targetEntity: Eccube\Entity\Category
             inversedBy: Plugin\SSProductListPage\Entity\ProductListLayout
             joinColumn:
                 name: page_id
-                referencedColumnName: product_id
+                referencedColumnName: category_id
 
     oneToMany:
         BlockPositions:

@@ -36,7 +36,6 @@ class SSProductListPageProvider implements ServiceProviderInterface
         
         $app['plugin.ss_product_list.repository.block_position'] = $app->share(function () use ($app) {
             $pageLayoutRepository = $app['orm.em']->getRepository('Plugin\SSProductListPage\Entity\ProductListBlockPosition');
-            $pageLayoutRepository->setApplication($app);
         
             return $pageLayoutRepository;
         });

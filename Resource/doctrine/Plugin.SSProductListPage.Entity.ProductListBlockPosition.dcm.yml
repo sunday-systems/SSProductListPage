@@ -2,13 +2,6 @@ Plugin\SSProductListPage\Entity\ProductListBlockPosition:
     type: entity
     table: plg_ss_product_list_block_position
     repositoryClass: Plugin\SSProductListPage\Repository\ProductListBlockPositionRepository
-    indexes:
-        IDX_E9A4248DC4663E4:
-            columns:
-                - page_id
-        IDX_E9A4248DE9ED820C:
-            columns:
-                - block_id
     id:
         page_id:
             type: integer
