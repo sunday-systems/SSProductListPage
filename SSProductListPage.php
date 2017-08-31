@@ -67,7 +67,11 @@ class SSProductListPage {
                 /*
                 $PageLayout = $this->app['eccube.repository.page_layout']->getByUrl($DeviceType, 'product_list', 'product_list');
                 */
-                    
+                
+                if (array_key_exists('preview', $_REQUEST)) {
+                    $cid = 0;
+                }
+                
                 $PageLayout = $this->app['plugin.ss_product_list.repository.page_layout']->get($DeviceType, $cid);
                 if ($PageLayout) {
                     if ($oldPageLayout) {

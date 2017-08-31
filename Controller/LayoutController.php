@@ -128,7 +128,7 @@ class LayoutController extends AbstractController
     
     
                 if ($this->isPreview) {
-                    return $app->redirect($app->url('homepage').$app['config']['user_data_route']."/products/list" .'?preview=1');
+                    return $app->redirect($app->url('product_list') . '?preview=1&category_id=' . $origId);
                 } else {
                     $app->addSuccess('admin.register.complete', 'admin');
                     return $app->redirect($app->url('ss_admin_product_list_layout_edit', array('id' => $id)));
