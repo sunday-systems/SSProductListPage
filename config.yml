@@ -2,7 +2,7 @@ name: 商品一覧ページレイアウト
 event: SSProductListPage
 code: SSProductListPage
 
-version: 0.0.0
+version: 1.0.0
 
 service: 
     - SSProductListPageProvider

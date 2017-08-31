@@ -79,7 +79,10 @@ class SSProductListPage {
                         $PageLayout->setDescription($oldPageLayout->getDescription());
                         $PageLayout->setKeyword($oldPageLayout->getKeyword());
                         $PageLayout->setMetaRobots($oldPageLayout->getMetaRobots());
-                        $PageLayout->setMetaTags($oldPageLayout->getMetaTags());
+                        if (function_exists($oldPageLayout, 'getMetaTags')) {
+                            $PageLayout->setMetaTags($oldPageLayout->getMetaTags());
+                        }
+                        
                     }
                     
                     $this->app['twig']->addGlobal('PageLayout', $PageLayout);
