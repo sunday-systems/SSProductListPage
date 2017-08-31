@@ -15,10 +15,6 @@ class SSProductListPageProvider implements ServiceProviderInterface
     public function register(BaseApplication $app)
     {
         
-        $app['sln.payment.config'] = $app->share(function () use ($app) {
-            return Yaml::parse(__DIR__ . '/../config.yml');
-        });
-        
         $app->match('/' . $app["config"]["admin_route"] . '/ss/product/list/layout/{id}/edit',
             '\Plugin\SSProductListPage\Controller\LayoutController::index')
             ->assert('id', '\d+')->bind('ss_admin_product_list_layout_edit');
