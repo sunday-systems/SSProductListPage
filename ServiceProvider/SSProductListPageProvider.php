@@ -27,6 +27,10 @@ class SSProductListPageProvider implements ServiceProviderInterface
             '\Plugin\SSProductListPage\Controller\LayoutController::preview')
             ->assert('id', '\d+')->bind('ss_admin_product_list_layout_preview');
         
+        $app->match('/' . $app["config"]["admin_route"] . '/ss/product/list/layout/{id}/delete',
+            '\Plugin\SSProductListPage\Controller\LayoutController::delete')
+            ->assert('id', '\d+')->bind('ss_admin_product_list_layout_delete');
+        
         $app['plugin.ss_product_list.repository.page_layout'] = $app->share(function () use ($app) {
             $pageLayoutRepository = $app['orm.em']->getRepository('Plugin\SSProductListPage\Entity\ProductListLayout');
             $pageLayoutRepository->setApplication($app);

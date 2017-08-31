@@ -7,8 +7,9 @@ use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Symfony\Component\HttpFoundation\Request;
 use Plugin\SSProductListPage\Form\Type\Admin\PageLayoutType;
+use Eccube\Controller\AbstractController;
 
-class LayoutController
+class LayoutController extends AbstractController
 {
     private $isPreview = false;
     
@@ -16,23 +17,17 @@ class LayoutController
     {
         $DeviceType = $app['eccube.repository.master.device_type']
             ->find(\Eccube\Entity\Master\DeviceType::DEVICE_TYPE_PC);
-    
-        $PreviewBlockPositions = $app['plugin.ss_product_list.repository.block_position']
-            ->findBy(array(
-                'page_id' => 0,
-            ));
-        foreach ($PreviewBlockPositions as $BlockPosition) {
-            $app['orm.em']->remove($BlockPosition);
-        }
-        $app['orm.em']->flush();
+        
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $app['orm.em'];
+        $em->getConnection()->exec("DELETE FROM plg_ss_product_list_block_position WHERE page_id = 0");
         
         // 編集対象ページ
         /* @var $TargetPageLayout \Plugin\SSProductListPage\Entity\ProductListLayout */
         try {
             $TargetPageLayout = $app['plugin.ss_product_list.repository.page_layout']->get($DeviceType, $id);
-            $OrigTargetPageLayout = $app['plugin.ss_product_list.repository.page_layout']->get($DeviceType, $origId);
         } catch (\Exception $e) {
-            $TargetPageLayout = $OrigTargetPageLayout = $app['plugin.ss_product_list.repository.page_layout']->newPageLayout($DeviceType, $id);
+            $TargetPageLayout = $app['plugin.ss_product_list.repository.page_layout']->newPageLayout($DeviceType, $id);
         }
         
         $Blocks = $app['orm.em']->getRepository('Eccube\Entity\Block')
@@ -148,6 +143,23 @@ class LayoutController
             'list_form' => $listForm->createView(),
             'TargetPageLayout' => $TargetPageLayout,
         ));
+    }
+    
+    public function delete(Application $app, Request $request, $id)
+    {
+        $this->isTokenValid($app);
+        
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $app['orm.em'];
+        $em->getConnection()->beginTransaction();
+        
+        $em->getConnection()->executeQuery("DELETE FROM plg_ss_product_list_block_position WHERE page_id = ?", array($id));
+        $em->getConnection()->executeQuery("DELETE FROM plg_ss_product_list_layout WHERE page_id = ?", array($id));
+        
+        $em->getConnection()->commit();
+        
+        $app->addSuccess('レイアウト情報を削除しました。', 'admin');
+        return $app->redirect($app->url('admin_product_category_show', ['parent_id' => $id]));
     }
     
     public function preview(Application $app, Request $request, $id)
