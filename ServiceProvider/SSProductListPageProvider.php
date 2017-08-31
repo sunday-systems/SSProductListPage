@@ -43,8 +43,6 @@ class SSProductListPageProvider implements ServiceProviderInterface
         
             return $pageLayoutRepository;
         });
-            
-        //$app['twig']->addGlobal('PageLayout', $app['plugin.ss_product_list.repository.page_layout']->find(1));
     }
 
     public function boot(BaseApplication $app)

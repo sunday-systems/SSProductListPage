@@ -3,6 +3,7 @@
 namespace Plugin\SSProductListPage;
 
 use Eccube\Event\TemplateEvent;
+use Eccube\Event\EventArgs;
 
 class SSProductListPage {
 
@@ -41,6 +42,48 @@ class SSProductListPage {
         
         $event->setParameters($data);
         $event->setSource($source);
+    }
+    
+    public function onFrontProductIndexInit(EventArgs $event)
+    {
+        /* @var $form \Symfony\Component\Form\FormBuilder */
+        
+        
+        if (array_key_exists('category_id', $_REQUEST)) {
+            $cid = intval($_REQUEST['category_id']);
+            
+            try {
+                $DeviceType = $this->app['eccube.repository.master.device_type']
+                    ->find(\Eccube\Entity\Master\DeviceType::DEVICE_TYPE_PC);
+                
+                /* @var $oldPageLayout \Eccube\Entity\PageLayout */
+                /* @var $PageLayout \Plugin\SSProductListPage\Entity\ProductListLayout */
+                $oldPageLayout = null;
+                    
+                $data = $this->app['twig']->getGlobals();
+                if (array_key_exists('PageLayout', $data)) {
+                    $oldPageLayout = $data['PageLayout'];
+                }
+                /*
+                $PageLayout = $this->app['eccube.repository.page_layout']->getByUrl($DeviceType, 'product_list', 'product_list');
+                */
+                    
+                $PageLayout = $this->app['plugin.ss_product_list.repository.page_layout']->get($DeviceType, $cid);
+                if ($PageLayout) {
+                    if ($oldPageLayout) {
+                        $PageLayout->setAuthor($oldPageLayout->getAuthor());
+                        $PageLayout->setDescription($oldPageLayout->getDescription());
+                        $PageLayout->setKeyword($oldPageLayout->getKeyword());
+                        $PageLayout->setMetaRobots($oldPageLayout->getMetaRobots());
+                        $PageLayout->setMetaTags($oldPageLayout->getMetaTags());
+                    }
+                    
+                    $this->app['twig']->addGlobal('PageLayout', $PageLayout);
+                }
+            } catch (\Doctrine\ORM\NoResultException $e) {
+                
+            }
+        }
     }
 }
 
