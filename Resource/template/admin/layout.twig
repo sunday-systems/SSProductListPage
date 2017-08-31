@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 {% set menus = ['content', 'page'] %}
 
 {% block title %}コンテンツ管理{% endblock %}
-{% block sub_title %}レイアウト管理{% endblock %}
+{% block sub_title %}商品リストレイアウト管理{% endblock %}
 
 {% form_theme form 'Form/bootstrap_3_horizontal_layout.html.twig' %}
 {% form_theme list_form 'Form/bootstrap_3_horizontal_layout.html.twig' %}
@@ -48,18 +48,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
             }
 
             $("#{{ list_form.layout.vars.id }}").on("change", function() {
-                var url = '{{ url('admin_content_layout_edit', { id : 9999 }) }}';
+                var url = '{{ url('ss_admin_product_list_layout_edit', { id : 9999 }) }}';
                 location.href = url.replace(9999, $(this).val());
             });
         });
         function doPreview() {
-            document.form1.action = "{{ url('admin_content_layout_preview', {id: TargetPageLayout.id}) }}";
+            document.form1.action = "{{ url('ss_admin_product_list_layout_preview', {id: TargetPageLayout.id}) }}";
             document.form1.target = "_blank";
             document.form1.submit();
             return false;
         }
         function doRegister() {
-            document.form1.action = "{{ url('admin_content_layout_edit', {id: TargetPageLayout.id}) }}";
+            document.form1.action = "{{ url('ss_admin_product_list_layout_edit', {id: TargetPageLayout.id}) }}";
             document.form1.target = "_self";
             document.form1.submit();
             return false;
@@ -69,7 +69,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 {% block main %}
  <div class="row" id="aside_wrap">
-    <form name="form1" id="form1" method="post" action="{{ url('admin_content_layout_edit', {id: TargetPageLayout.id}) }}">
+    <form name="form1" id="form1" method="post" action="{{ url('ss_admin_product_list_layout_edit', {id: TargetPageLayout.id}) }}">
         {{ form_widget(form._token) }}
             <div id="detail_wrap" class="col-md-9">
                 {# ▼レイアウトここから #}
@@ -93,9 +93,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                                                     <input type="hidden" class="target-id" name="target_id_{{ loop_index }}" value="{{ BlockPosition.target_id }}" />
                                                     <input type="hidden" class="top" name="top_{{ loop_index }}" value="{{ BlockPosition.block_row }}" />
                                                     {{ BlockPosition.Block.name }}
-                                                    <label class="anywherecheck">
-                                                        (<input type="checkbox" class="anywhere" name="anywhere_{{ loop_index }}" value="1" {% if BlockPosition.anywhere == 1 %} checked="checked"{% endif %} />全ページ)
-                                                    </label>
                                                 </div>
                                                 {% set loop_index = loop_index + 1 %}
                                             {% endfor %}
@@ -111,9 +108,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                                                     <input type="hidden" class="target-id" name="target_id_{{ loop_index }}" value="{{ BlockPosition.target_id }}" />
                                                     <input type="hidden" class="top" name="top_{{ loop_index }}" value="{{ BlockPosition.block_row }}" />
                                                     {{ BlockPosition.Block.name }}
-                                                    <label class="anywherecheck">
-                                                        (<input type="checkbox" class="anywhere" name="anywhere_{{ loop_index }}" value="1" {% if BlockPosition.anywhere == 1 %} checked="checked"{% endif %} />全ページ)
-                                                    </label>
                                                 </div>
                                                 {% set loop_index = loop_index + 1 %}
                                             {% endfor %}
@@ -129,9 +123,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                                                     <input type="hidden" class="target-id" name="target_id_{{ loop_index }}" value="{{ BlockPosition.target_id }}" />
                                                     <input type="hidden" class="top" name="top_{{ loop_index }}" value="{{ BlockPosition.block_row }}" />
                                                     {{ BlockPosition.Block.name }}
-                                                    <label class="anywherecheck">
-                                                        (<input type="checkbox" class="anywhere" name="anywhere_{{ loop_index }}" value="1" {% if BlockPosition.anywhere == 1 %} checked="checked"{% endif %} />全ページ)
-                                                    </label>
                                                 </div>
                                                 {% set loop_index = loop_index + 1 %}
                                             {% endfor %}
@@ -147,9 +138,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                                                     <input type="hidden" class="target-id" name="target_id_{{ loop_index }}" value="{{ BlockPosition.target_id }}" />
                                                     <input type="hidden" class="top" name="top_{{ loop_index }}" value="{{ BlockPosition.block_row }}" />
                                                     {{ BlockPosition.Block.name }}
-                                                    <label class="anywherecheck">
-                                                        (<input type="checkbox" class="anywhere" name="anywhere_{{ loop_index }}" value="1" {% if BlockPosition.anywhere == 1 %} checked="checked"{% endif %} />全ページ)
-                                                    </label>
                                                 </div>
                                                 {% set loop_index = loop_index + 1 %}
                                             {% endfor %}
@@ -162,9 +150,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                                                     <input type="hidden" class="target-id" name="target_id_{{ loop_index }}" value="{{ BlockPosition.target_id }}" />
                                                     <input type="hidden" class="top" name="top_{{ loop_index }}" value="{{ BlockPosition.block_row }}" />
                                                     {{ BlockPosition.Block.name }}
-                                                    <label class="anywherecheck">
-                                                        (<input type="checkbox" class="anywhere" name="anywhere_{{ loop_index }}" value="1" {% if BlockPosition.anywhere == 1 %} checked="checked"{% endif %} />全ページ)
-                                                    </label>
                                                 </div>
                                                 {% set loop_index = loop_index + 1 %}
                                             {% endfor %}
@@ -177,9 +162,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                                                     <input type="hidden" class="target-id" name="target_id_{{ loop_index }}" value="{{ BlockPosition.target_id }}" />
                                                     <input type="hidden" class="top" name="top_{{ loop_index }}" value="{{ BlockPosition.block_row }}" />
                                                     {{ BlockPosition.Block.name }}
-                                                    <label class="anywherecheck">
-                                                        (<input type="checkbox" class="anywhere" name="anywhere_{{ loop_index }}" value="1" {% if BlockPosition.anywhere == 1 %} checked="checked"{% endif %} />全ページ)
-                                                    </label>
                                                 </div>
                                                 {% set loop_index = loop_index + 1 %}
                                             {% endfor %}
@@ -201,9 +183,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                                                     <input type="hidden" class="target-id" name="target_id_{{ loop_index }}" value="{{ BlockPosition.target_id }}" />
                                                     <input type="hidden" class="top" name="top_{{ loop_index }}" value="{{ BlockPosition.block_row }}" />
                                                     {{ BlockPosition.Block.name }}
-                                                    <label class="anywherecheck">
-                                                        (<input type="checkbox" class="anywhere" name="anywhere_{{ loop_index }}" value="1" {% if BlockPosition.anywhere == 1 %} checked="checked"{% endif %} />全ページ)
-                                                    </label>
                                                 </div>
                                                 {% set loop_index = loop_index + 1 %}
                                             {% endfor %}
@@ -219,9 +198,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                                                     <input type="hidden" class="target-id" name="target_id_{{ loop_index }}" value="{{ BlockPosition.target_id }}" />
                                                     <input type="hidden" class="top" name="top_{{ loop_index }}" value="{{ BlockPosition.block_row }}" />
                                                     {{ BlockPosition.Block.name }}
-                                                    <label class="anywherecheck">
-                                                        (<input type="checkbox" class="anywhere" name="anywhere_{{ loop_index }}" value="1" {% if BlockPosition.anywhere == 1 %} checked="checked"{% endif %} />全ページ)
-                                                    </label>
                                                 </div>
                                                 {% set loop_index = loop_index + 1 %}
                                             {% endfor %}
@@ -237,9 +213,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                                                     <input type="hidden" class="target-id" name="target_id_{{ loop_index }}" value="{{ BlockPosition.target_id }}" />
                                                     <input type="hidden" class="top" name="top_{{ loop_index }}" value="{{ BlockPosition.block_row }}" />
                                                     {{ BlockPosition.Block.name }}
-                                                    <label class="anywherecheck">
-                                                        (<input type="checkbox" class="anywhere" name="anywhere_{{ loop_index }}" value="1" {% if BlockPosition.anywhere == 1 %} checked="checked"{% endif %} />全ページ)
-                                                    </label>
                                                 </div>
                                                 {% set loop_index = loop_index + 1 %}
                                             {% endfor %}
@@ -264,9 +237,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                                                     <input type="hidden" class="target-id" name="target_id_{{ loop_index }}" value="{{ BlockPosition.target_id }}" />
                                                     <input type="hidden" class="top" name="top_{{ loop_index }}" value="{{ BlockPosition.block_row }}" />
                                                     {{ BlockPosition.Block.name }}
-                                                    <label class="anywherecheck">
-                                                        (<input type="checkbox" class="anywhere" name="anywhere_{{ loop_index }}" value="1" {% if BlockPosition.anywhere == 1 %} checked="checked"{% endif %} />全ページ)
-                                                    </label>
                                                 </div>
                                                 {% set loop_index = loop_index + 1 %}
                                             {% endfor %}
@@ -279,7 +249,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                     </div>
                     <div id="detail_box__footer" class="row">
                         <div id="detail_box__back_button" class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 text-center btn_area2">
-                            <p><a href="{{ url('admin_content_page') }}">戻る</a></p>
+                            <p><a href="{{ url('admin_product_category_edit', {id: TargetPageLayout.id}) }}">戻る</a></p>
                         </div>
                     </div>
                 </div>
@@ -297,22 +267,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                     </div><!-- /.box -->
                     <div id="preview_box" class="box">
                         <div id="preview_box__preview_button" class="box-header">
-                            {% set disabled = true %}
-                            {%  if TargetPageLayout.url != 'entry_activate' and 
-                                   TargetPageLayout.url != 'shopping' and
-                                   TargetPageLayout.url != 'shopping_shipping' and
-                                   TargetPageLayout.url != 'shopping_shipping_multiple' and
-                                   TargetPageLayout.url != 'shopping_complete' and
-                                   TargetPageLayout.url != 'shopping_login' and 
-                                   TargetPageLayout.url != 'shopping_nonmember' and
-                                   TargetPageLayout.url != 'shopping_shipping_edit' and
-                                   TargetPageLayout.url != 'shopping_shipping_multiple_edit' and
-                                   TargetPageLayout.url != 'shopping_error' and
-                                   TargetPageLayout.url != 'forgot_reset'
-                            %}
-                            {% set disabled = false %}
-                            {% endif %}
-                            <button  class="btn btn-default btn-block btn-sm" {% if TargetPageLayout.DeviceType.id != constant('Eccube\\Entity\\Master\\DeviceType::DEVICE_TYPE_PC') or disabled %}disabled{% endif %} onclick="return doPreview();">
+                            <button  class="btn btn-default btn-block btn-sm" onclick="return doPreview();">
                                 プレビュー
                             </button>
                         </div><!-- /.box-header -->

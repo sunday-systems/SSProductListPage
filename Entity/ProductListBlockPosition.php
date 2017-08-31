@@ -27,22 +27,22 @@ class ProductListBlockPosition extends \Eccube\Entity\AbstractEntity
     /**
      * @var integer
      */
-    private $blockRow;
+    private $block_row;
 
     /**
      * @var integer
      */
-    private $anywhere;
+    private $anywhere = '0';
 
     /**
-     * @var \Eccube\Entity\Block
+     * @var \Plugin\SSProductListPage\Entity\Block
      */
     private $Block;
 
     /**
      * @var \Plugin\SSProductListPage\Entity\ProductListLayout
      */
-    private $PageLayout;
+    private $ProductListLayout;
 
 
     /**
@@ -115,26 +115,26 @@ class ProductListBlockPosition extends \Eccube\Entity\AbstractEntity
     }
 
     /**
-     * Set blockRow
+     * Set block_row
      *
      * @param integer $blockRow
      * @return ProductListBlockPosition
      */
     public function setBlockRow($blockRow)
     {
-        $this->blockRow = $blockRow;
+        $this->block_row = $blockRow;
 
         return $this;
     }
 
     /**
-     * Get blockRow
+     * Get block_row
      *
      * @return integer 
      */
     public function getBlockRow()
     {
-        return $this->blockRow;
+        return $this->block_row;
     }
 
     /**
@@ -163,10 +163,10 @@ class ProductListBlockPosition extends \Eccube\Entity\AbstractEntity
     /**
      * Set Block
      *
-     * @param \Eccube\Entity\Block $block
+     * @param \Plugin\SSProductListPage\Entity\Block $block
      * @return ProductListBlockPosition
      */
-    public function setBlock(\Eccube\Entity\Block $block)
+    public function setBlock(\Plugin\SSProductListPage\Entity\Block $block)
     {
         $this->Block = $block;
 
@@ -176,7 +176,7 @@ class ProductListBlockPosition extends \Eccube\Entity\AbstractEntity
     /**
      * Get Block
      *
-     * @return \Eccube\Entity\Block 
+     * @return \Plugin\SSProductListPage\Entity\Block 
      */
     public function getBlock()
     {
@@ -184,25 +184,25 @@ class ProductListBlockPosition extends \Eccube\Entity\AbstractEntity
     }
 
     /**
-     * Set PageLayout
+     * Set ProductListLayout
      *
-     * @param \Plugin\SSProductListPage\Entity\ProductListLayout $pageLayout
+     * @param \Plugin\SSProductListPage\Entity\ProductListLayout $productListLayout
      * @return ProductListBlockPosition
      */
-    public function setPageLayout(\Plugin\SSProductListPage\Entity\ProductListLayout $pageLayout)
+    public function setProductListLayout(\Plugin\SSProductListPage\Entity\ProductListLayout $productListLayout)
     {
-        $this->PageLayout = $pageLayout;
+        $this->ProductListLayout = $productListLayout;
 
         return $this;
     }
 
     /**
-     * Get PageLayout
+     * Get ProductListLayout
      *
      * @return \Plugin\SSProductListPage\Entity\ProductListLayout 
      */
-    public function getPageLayout()
+    public function getProductListLayout()
     {
-        return $this->PageLayout;
+        return $this->ProductListLayout;
     }
 }

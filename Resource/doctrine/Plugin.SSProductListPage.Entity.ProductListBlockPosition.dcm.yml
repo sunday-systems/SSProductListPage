@@ -19,27 +19,27 @@ Plugin\SSProductListPage\Entity\ProductListBlockPosition:
             unsigned: false
             id: true
     fields:
-        blockRow:
+        block_row:
             type: integer
             nullable: true
             unsigned: false
-            column: block_row
         anywhere:
-            type: integer
+            type: smallint
             nullable: false
             unsigned: false
-            default: '0'
+            options:
+                default: '0'
     manyToOne:
         Block:
-            targetEntity: Eccube\Entity\Block
-            inversedBy: Plugin\SSProductListPage\Entity\ProductListBlockPosition
+            targetEntity: Plugin\SSProductListPage\Entity\Block
+            inversedBy: ProductListBlockPositions
             joinColumn:
                 name: block_id
                 referencedColumnName: block_id
                 nullable: false
-        PageLayout:
+        ProductListLayout:
             targetEntity: Plugin\SSProductListPage\Entity\ProductListLayout
-            inversedBy: Plugin\SSProductListPage\Entity\ProductListBlockPosition
+            inversedBy: ProductListBlockPositions
             joinColumn:
                 name: page_id
                 referencedColumnName: page_id

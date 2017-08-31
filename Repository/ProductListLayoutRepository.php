@@ -25,20 +25,22 @@ class ProductListLayoutRepository extends EntityRepository
     
     public function findUnusedBlocks(DeviceType $DeviceType, $pageId)
     {
-        $em = $this
-        ->getEntityManager();
-        $blockRepo = $em->getRepository('Eccube\Entity\Block');
-        $ownBlockPositions = $this->get($DeviceType, $pageId)->getBlockPositions();
+        $em = $this->getEntityManager();
+        $blockRepo = $em->getRepository('Plugin\SSProductListPage\Entity\Block');
         $ids = array();
-        foreach ($ownBlockPositions as $ownBlockPosition) {
-            $ids[] = $ownBlockPosition->getBlock()->getId();
+        try {
+            $ownBlockPositions = $this->get($DeviceType, $pageId)->getProductListBlockPositions();
+            foreach ($ownBlockPositions as $ownBlockPosition) {
+                $ids[] = $ownBlockPosition->getBlock()->getId();
+            }
+        } catch (\Exception $e) {
         }
     
         # $idsが空配列だと、$ids以外のblockを取得するSQLが生成されないため、存在しないidを入れる
         if (empty($ids)) {
             $ids[] = \Eccube\Entity\Block::UNUSED_BLOCK_ID;
         }
-    
+
         return $blockRepo->createQueryBuilder('b')
         ->where('b.id not in (:ids)')
         ->setParameter(':ids', $ids)
@@ -50,9 +52,9 @@ class ProductListLayoutRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p, bp, b')
-            ->leftJoin('p.BlockPositions', 'bp', 'WITH', 'p.id = bp.page_id')
+            ->leftJoin('p.ProductListBlockPositions', 'bp', 'WITH', 'p.page_id = bp.page_id')
             ->leftJoin('bp.Block', 'b')
-            ->andWhere('p.DeviceType = :DeviceType AND p.id = :pageId')
+            ->andWhere('p.DeviceType = :DeviceType AND p.page_id = :pageId')
             ->addOrderBy('bp.target_id', 'ASC')
             ->addOrderBy('bp.block_row', 'ASC');
     
@@ -66,7 +68,7 @@ class ProductListLayoutRepository extends EntityRepository
     
         $qb = $this->createQueryBuilder('p')
             ->select('p, bp, b')
-            ->leftJoin('p.BlockPositions', 'bp', 'WITH', 'p.id = bp.page_id')
+            ->leftJoin('p.ProductListBlockPositions', 'bp', 'WITH', 'p.page_id = bp.page_id')
             ->leftJoin('bp.Block', 'b')
             ->andWhere('p.DeviceType = :DeviceType AND bp.anywhere = 1')
             ->addOrderBy('bp.target_id', 'ASC')
@@ -79,9 +81,9 @@ class ProductListLayoutRepository extends EntityRepository
             ))
             ->getResult();
     
-        $OwnBlockPosition = $ownResult->getBlockPositions();
+        $OwnBlockPosition = $ownResult->getProductListBlockPositions();
         foreach ($anyResults as $anyResult) {
-            $BlockPositions = $anyResult->getBlockPositions();
+            $BlockPositions = $anyResult->getProductListBlockPositions();
             foreach ($BlockPositions as $BlockPosition) {
                 if (!$OwnBlockPosition->contains($BlockPosition)) {
                     $ownResult->addBlockPosition($BlockPosition);
@@ -93,71 +95,17 @@ class ProductListLayoutRepository extends EntityRepository
     
     }
     
-    public function getByUrl(DeviceType $DeviceType, $url, $page = null)
+    /**
+     * @param DeviceType $DeviceType
+     * @param unknown $pageId
+     * @return \Plugin\SSProductListPage\Entity\ProductListLayout
+     */
+    public function newPageLayout(DeviceType $DeviceType, $pageId)
     {
-        $options = $this->app['config']['doctrine_cache'];
-        $lifetime = $options['result_cache']['lifetime'];
-    
-        $qb = $this->createQueryBuilder('p')
-            ->select('p, bp, b')
-            ->leftJoin('p.BlockPositions', 'bp', 'WITH', 'p.id = bp.page_id')
-            ->leftJoin('bp.Block', 'b')
-            ->andWhere('p.DeviceType = :DeviceType AND p.url = :url')
-            ->addOrderBy('bp.target_id', 'ASC')
-            ->addOrderBy('bp.block_row', 'ASC');
-    
-        $ownResult = $qb
-            ->getQuery()
-            ->useResultCache(true, $lifetime)
-            ->setParameters(array(
-                'DeviceType' => $DeviceType,
-                'url'  => $url,
-            ))
-            ->getSingleResult();
-    
-        if(count($ownResult->getBlockPositions()) && ($url == 'preview') && ($page == 'homepage')) {
-            return $ownResult;
-        }
-    
-        $qb = $this->createQueryBuilder('p')
-            ->select('p, bp, b')
-            ->leftJoin('p.BlockPositions', 'bp', 'WITH', 'p.id = bp.page_id')
-            ->leftJoin('bp.Block', 'b')
-            ->andWhere('p.DeviceType = :DeviceType AND bp.anywhere = 1')
-            ->addOrderBy('bp.target_id', 'ASC')
-            ->addOrderBy('bp.block_row', 'ASC');
-    
-        $anyResults = $qb
-            ->getQuery()
-            ->useResultCache(true, $lifetime)
-            ->setParameters(array(
-                'DeviceType' => $DeviceType,
-            ))
-            ->getResult();
-    
-        $OwnBlockPosition = $ownResult->getBlockPositions();
-        $OwnBlockPositionIds = array();
-        foreach ($OwnBlockPosition as $BlockPosition) {
-            $OwnBlockPositionIds[] =  $BlockPosition->getBlockId();
-        }
-    
-        foreach ($anyResults as $anyResult) {
-            $BlockPositions = $anyResult->getBlockPositions();
-            foreach ($BlockPositions as $BlockPosition) {
-                if (!in_array($BlockPosition->getBlockId(), $OwnBlockPositionIds)) {
-                    $ownResult->addBlockPosition($BlockPosition);
-                    $OwnBlockPositionIds[] = $BlockPosition->getBlockId();
-                }
-            }
-        }
-    
-        return $ownResult;
-    }
-    
-    public function newPageLayout(DeviceType $DeviceType)
-    {
-        $PageLayout = new \Eccube\Entity\PageLayout();
+        $PageLayout = new \Plugin\SSProductListPage\Entity\ProductListLayout();
         $PageLayout
+            ->setPageId($pageId)
+            ->setDeviceTypeId($DeviceType->getId())
             ->setDeviceType($DeviceType)
             ->setEditFlg(PageLayout::EDIT_FLG_USER);
     
@@ -189,11 +137,11 @@ class ProductListLayoutRepository extends EntityRepository
     public function getPageList(DeviceType $DeviceType, $where = null, $parameters = array())
     {
         $qb = $this->createQueryBuilder('l')
-            ->orderBy('l.id', 'DESC')
+            ->orderBy('l.page_id', 'DESC')
             ->where('l.DeviceType = :DeviceType')
             ->setParameter('DeviceType', $DeviceType)
-            ->andWhere('l.id <> 0')
-            ->orderBy('l.id', 'ASC');
+            ->andWhere('l.page_id <> 0')
+            ->orderBy('l.page_id', 'ASC');
         if (!is_null($where)) {
             $qb->andWhere($where);
             foreach ($parameters as $key => $val) {

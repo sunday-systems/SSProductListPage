@@ -65,7 +65,6 @@ class Version201708310000 extends AbstractMigration
         ));
         
         $table->setPrimaryKey(array('page_id', 'device_type_id'));
-        $table->addForeignKeyConstraint('dtb_category', array('page_id'), array('category_id'));
         
         $table = $schema->createTable('plg_ss_product_list_block_position');
         
@@ -91,7 +90,7 @@ class Version201708310000 extends AbstractMigration
         ));
         
         $table->setPrimaryKey(array('page_id', 'target_id', 'block_id'));
-        $table->addForeignKeyConstraint('dtb_category', array('page_id'), array('category_id'));
+        $table->addForeignKeyConstraint('plg_ss_product_list_layout', array('page_id'), array('page_id'));
         $table->addForeignKeyConstraint('dtb_block', array('block_id'), array('block_id'));
         
     }

@@ -1,0 +1,158 @@
+<?php
+
+namespace Plugin\SSProductListPage\Controller;
+
+use Eccube\Application;
+use Eccube\Event\EccubeEvents;
+use Eccube\Event\EventArgs;
+use Symfony\Component\HttpFoundation\Request;
+use Plugin\SSProductListPage\Form\Type\Admin\PageLayoutType;
+
+class LayoutController
+{
+    private $isPreview = false;
+    
+    public function index(Application $app, Request $request, $id = 1, $origId = 1)
+    {
+        $DeviceType = $app['eccube.repository.master.device_type']
+            ->find(\Eccube\Entity\Master\DeviceType::DEVICE_TYPE_PC);
+    
+        $PreviewBlockPositions = $app['plugin.ss_product_list.repository.block_position']
+            ->findBy(array(
+                'page_id' => 0,
+            ));
+        foreach ($PreviewBlockPositions as $BlockPosition) {
+            $app['orm.em']->remove($BlockPosition);
+        }
+        $app['orm.em']->flush();
+        
+        // 編集対象ページ
+        /* @var $TargetPageLayout \Plugin\SSProductListPage\Entity\ProductListLayout */
+        try {
+            $TargetPageLayout = $app['plugin.ss_product_list.repository.page_layout']->get($DeviceType, $id);
+            $OrigTargetPageLayout = $app['plugin.ss_product_list.repository.page_layout']->get($DeviceType, $origId);
+        } catch (\Exception $e) {
+            $TargetPageLayout = $OrigTargetPageLayout = $app['plugin.ss_product_list.repository.page_layout']->newPageLayout($DeviceType, $id);
+        }
+        
+        $Blocks = $app['orm.em']->getRepository('Eccube\Entity\Block')
+            ->findBy(array(
+                'DeviceType' => $DeviceType,
+            ));
+        $BlockPositions = $TargetPageLayout->getBlockPositions();
+    
+        $pageForm = new PageLayoutType();
+        $builderLayout = $app['form.factory']->createBuilder($pageForm);
+    
+        // 未使用ブロックの取得
+        $unusedBlocks = $app['plugin.ss_product_list.repository.page_layout']->findUnusedBlocks($DeviceType, $id);
+        
+        foreach ($unusedBlocks as $unusedBlock) {
+            $UnusedBlockPosition = new \Plugin\SSProductListPage\Entity\ProductListBlockPosition();
+            $UnusedBlockPosition
+                ->setPageId($id)
+                ->setTargetId(\Eccube\Entity\PageLayout::TARGET_ID_UNUSED)
+                ->setAnywhere(0)
+                ->setBlockRow(0)
+                ->setBlockId($unusedBlock->getId())
+                ->setBlock($unusedBlock)
+                ->setProductListLayout($TargetPageLayout);
+            $TargetPageLayout->addProductListBlockPosition($UnusedBlockPosition);
+        }
+    
+        $builder = $app['form.factory']->createBuilder();
+    
+        $listForm = $builderLayout->getForm();
+        
+        $listForm->get('layout')->setData($app['eccube.repository.category']->find($id));
+    
+        $form = $builder->getForm();
+    
+        if ('POST' === $request->getMethod()) {
+            $form->handleRequest($request);
+    
+            if ($form->isValid()) {
+                // 消す
+                foreach ($BlockPositions as $BlockPosition) {
+                    if ($BlockPosition->getPageId() == $id || $BlockPosition->getAnywhere() == 0) {
+                        $TargetPageLayout->removeProductListBlockPosition($BlockPosition);
+                        $app['orm.em']->remove($BlockPosition);
+                    }
+                }
+                $app['orm.em']->flush();
+    
+                // TODO: collection を利用
+    
+                $data = $request->request->all();
+                $max = count($Blocks);
+                for ($i = 0; $i < $max; $i++) {
+                    // block_id が取得できない場合は INSERT しない
+                    if (!isset($data['id_' . $i])) {
+                        continue;
+                    }
+                    // 未使用は INSERT しない
+                    if ($data['target_id_' . $i] == \Eccube\Entity\PageLayout::TARGET_ID_UNUSED) {
+                        continue;
+                    }
+                    // 他のページに anywhere が存在する場合は INSERT しない
+                    $anywhere = (isset($data['anywhere_' . $i]) && $data['anywhere_' . $i] == 1) ? 1 : 0;
+    
+                    if (isset($data['anywhere_' . $i]) && $data['anywhere_' . $i] == 1) {
+                        $Other = $app['orm.em']->getRepository('\Plugin\SSProductListPage\Entity\ProductListBlockPosition')
+                        ->findBy(array(
+                            'anywhere' => 1,
+                            'block_id' => $data['id_' . $i],
+                        ));
+                        //exist and not preview model
+                        if (( count($Other) > 0)&&($id)) {
+                            continue;
+                        }
+                    }
+    
+                    $BlockPosition = new \Plugin\SSProductListPage\Entity\ProductListBlockPosition();
+                    $Block = $app['orm.em']->getRepository('\Plugin\SSProductListPage\Entity\Block')
+                    ->findOneBy(array(
+                        'id' => $data['id_' . $i],
+                        'DeviceType' => $DeviceType,
+                    ));
+                    $BlockPosition
+                        ->setPageId($id)
+                        ->setBlockId($data['id_' . $i])
+                        ->setBlockRow($data['top_' . $i])
+                        ->setTargetId($data['target_id_' . $i])
+                        ->setBlock($Block)
+                        ->setProductListLayout($TargetPageLayout)
+                        ->setAnywhere($anywhere);
+    
+                    $TargetPageLayout->addProductListBlockPosition($BlockPosition);
+                    $app['orm.em']->persist($BlockPosition);
+                }
+    
+                $app['orm.em']->persist($TargetPageLayout);
+                $app['orm.em']->flush();
+    
+    
+                if ($this->isPreview) {
+                    return $app->redirect($app->url('homepage').$app['config']['user_data_route']."/products/list" .'?preview=1');
+                } else {
+                    $app->addSuccess('admin.register.complete', 'admin');
+                    return $app->redirect($app->url('ss_admin_product_list_layout_edit', array('id' => $id)));
+                }
+    
+            }
+    
+        }
+    
+        return $app->render('SSProductListPage/Resource/template/admin/layout.twig', array(
+            'form' => $form->createView(),
+            'list_form' => $listForm->createView(),
+            'TargetPageLayout' => $TargetPageLayout,
+        ));
+    }
+    
+    public function preview(Application $app, Request $request, $id)
+    {
+        $this->isPreview = true;
+        return $this->index($app, $request, 0, $id);
+    }
+}

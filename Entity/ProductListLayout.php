@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ProductListLayout extends \Eccube\Entity\AbstractEntity
 {
+    
     // 配置ID
     /** 配置ID: 未使用 */
     const TARGET_ID_UNUSED = 0;
@@ -189,7 +190,6 @@ class ProductListLayout extends \Eccube\Entity\AbstractEntity
         return $this->getBlocksByTargetId(self::TARGET_ID_FOOTER);
     }
     
-    
     /**
      * @var integer
      */
@@ -198,17 +198,17 @@ class ProductListLayout extends \Eccube\Entity\AbstractEntity
     /**
      * @var integer
      */
-    private $deviceTypeId;
+    private $device_type_id;
 
     /**
      * @var string
      */
-    private $pageName;
+    private $name;
 
     /**
      * @var integer
      */
-    private $editFlg;
+    private $edit_flg = '1';
 
     /**
      * @var string
@@ -228,37 +228,27 @@ class ProductListLayout extends \Eccube\Entity\AbstractEntity
     /**
      * @var string
      */
-    private $updateUrl;
+    private $update_url;
 
     /**
      * @var \DateTime
      */
-    private $createDate;
+    private $create_date;
 
     /**
      * @var \DateTime
      */
-    private $updateDate;
+    private $update_date;
 
     /**
      * @var string
      */
-    private $metaRobots;
-
-    /**
-     * @var string
-     */
-    private $metaTags;
-
-    /**
-     * @var \Eccube\Entity\Category
-     */
-    private $Category;
+    private $meta_robots;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $BlockPositions;
+    private $ProductListBlockPositions;
 
     /**
      * @var \Eccube\Entity\Master\DeviceType
@@ -270,7 +260,12 @@ class ProductListLayout extends \Eccube\Entity\AbstractEntity
      */
     public function __construct()
     {
-        $this->BlockPositions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->ProductListBlockPositions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    public function getId()
+    {
+        return $this->page_id;
     }
 
     /**
@@ -297,72 +292,72 @@ class ProductListLayout extends \Eccube\Entity\AbstractEntity
     }
 
     /**
-     * Set deviceTypeId
+     * Set device_type_id
      *
      * @param integer $deviceTypeId
      * @return ProductListLayout
      */
     public function setDeviceTypeId($deviceTypeId)
     {
-        $this->deviceTypeId = $deviceTypeId;
+        $this->device_type_id = $deviceTypeId;
 
         return $this;
     }
 
     /**
-     * Get deviceTypeId
+     * Get device_type_id
      *
      * @return integer 
      */
     public function getDeviceTypeId()
     {
-        return $this->deviceTypeId;
+        return $this->device_type_id;
     }
 
     /**
-     * Set pageName
+     * Set name
      *
-     * @param string $pageName
+     * @param string $name
      * @return ProductListLayout
      */
-    public function setPageName($pageName)
+    public function setName($name)
     {
-        $this->pageName = $pageName;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get pageName
+     * Get name
      *
      * @return string 
      */
-    public function getPageName()
+    public function getName()
     {
-        return $this->pageName;
+        return $this->name;
     }
 
     /**
-     * Set editFlg
+     * Set edit_flg
      *
      * @param integer $editFlg
      * @return ProductListLayout
      */
     public function setEditFlg($editFlg)
     {
-        $this->editFlg = $editFlg;
+        $this->edit_flg = $editFlg;
 
         return $this;
     }
 
     /**
-     * Get editFlg
+     * Get edit_flg
      *
      * @return integer 
      */
     public function getEditFlg()
     {
-        return $this->editFlg;
+        return $this->edit_flg;
     }
 
     /**
@@ -435,174 +430,138 @@ class ProductListLayout extends \Eccube\Entity\AbstractEntity
     }
 
     /**
-     * Set updateUrl
+     * Set update_url
      *
      * @param string $updateUrl
      * @return ProductListLayout
      */
     public function setUpdateUrl($updateUrl)
     {
-        $this->updateUrl = $updateUrl;
+        $this->update_url = $updateUrl;
 
         return $this;
     }
 
     /**
-     * Get updateUrl
+     * Get update_url
      *
      * @return string 
      */
     public function getUpdateUrl()
     {
-        return $this->updateUrl;
+        return $this->update_url;
     }
 
     /**
-     * Set createDate
+     * Set create_date
      *
      * @param \DateTime $createDate
      * @return ProductListLayout
      */
     public function setCreateDate($createDate)
     {
-        $this->createDate = $createDate;
+        $this->create_date = $createDate;
 
         return $this;
     }
 
     /**
-     * Get createDate
+     * Get create_date
      *
      * @return \DateTime 
      */
     public function getCreateDate()
     {
-        return $this->createDate;
+        return $this->create_date;
     }
 
     /**
-     * Set updateDate
+     * Set update_date
      *
      * @param \DateTime $updateDate
      * @return ProductListLayout
      */
     public function setUpdateDate($updateDate)
     {
-        $this->updateDate = $updateDate;
+        $this->update_date = $updateDate;
 
         return $this;
     }
 
     /**
-     * Get updateDate
+     * Get update_date
      *
      * @return \DateTime 
      */
     public function getUpdateDate()
     {
-        return $this->updateDate;
+        return $this->update_date;
     }
 
     /**
-     * Set metaRobots
+     * Set meta_robots
      *
      * @param string $metaRobots
      * @return ProductListLayout
      */
     public function setMetaRobots($metaRobots)
     {
-        $this->metaRobots = $metaRobots;
+        $this->meta_robots = $metaRobots;
 
         return $this;
     }
 
     /**
-     * Get metaRobots
+     * Get meta_robots
      *
      * @return string 
      */
     public function getMetaRobots()
     {
-        return $this->metaRobots;
+        return $this->meta_robots;
     }
 
     /**
-     * Set metaTags
+     * Add ProductListBlockPositions
      *
-     * @param string $metaTags
+     * @param \Plugin\SSProductListPage\Entity\ProductListBlockPosition $productListBlockPositions
      * @return ProductListLayout
      */
-    public function setMetaTags($metaTags)
+    public function addProductListBlockPosition(\Plugin\SSProductListPage\Entity\ProductListBlockPosition $productListBlockPositions)
     {
-        $this->metaTags = $metaTags;
+        $this->ProductListBlockPositions[] = $productListBlockPositions;
 
         return $this;
     }
 
     /**
-     * Get metaTags
+     * Remove ProductListBlockPositions
      *
-     * @return string 
+     * @param \Plugin\SSProductListPage\Entity\ProductListBlockPosition $productListBlockPositions
      */
-    public function getMetaTags()
+    public function removeProductListBlockPosition(\Plugin\SSProductListPage\Entity\ProductListBlockPosition $productListBlockPositions)
     {
-        return $this->metaTags;
+        $this->ProductListBlockPositions->removeElement($productListBlockPositions);
     }
 
     /**
-     * Set Category
-     *
-     * @param \Eccube\Entity\Category $category
-     * @return ProductListLayout
-     */
-    public function setCategory(\Eccube\Entity\Category $category = null)
-    {
-        $this->Category = $category;
-
-        return $this;
-    }
-
-    /**
-     * Get Category
-     *
-     * @return \Eccube\Entity\Category 
-     */
-    public function getCategory()
-    {
-        return $this->Category;
-    }
-
-    /**
-     * Add BlockPositions
-     *
-     * @param \Plugin\SSProductListPage\Entity\ProductListBlockPosition $blockPositions
-     * @return ProductListLayout
-     */
-    public function addBlockPosition(\Plugin\SSProductListPage\Entity\ProductListBlockPosition $blockPositions)
-    {
-        $this->BlockPositions[] = $blockPositions;
-
-        return $this;
-    }
-
-    /**
-     * Remove BlockPositions
-     *
-     * @param \Plugin\SSProductListPage\Entity\ProductListBlockPosition $blockPositions
-     */
-    public function removeBlockPosition(\Plugin\SSProductListPage\Entity\ProductListBlockPosition $blockPositions)
-    {
-        $this->BlockPositions->removeElement($blockPositions);
-    }
-
-    /**
-     * Get BlockPositions
+     * Get ProductListBlockPositions
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
+    public function getProductListBlockPositions()
+    {
+        return $this->ProductListBlockPositions;
+    }
+    
+    /**
+     * Get BlockPositions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
     public function getBlockPositions()
     {
-        return $this->BlockPositions;
+        return $this->ProductListBlockPositions;
     }
 
     /**

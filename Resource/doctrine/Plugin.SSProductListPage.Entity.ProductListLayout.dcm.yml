@@ -8,83 +8,53 @@ Plugin\SSProductListPage\Entity\ProductListLayout:
             nullable: false
             unsigned: false
             id: true
-        deviceTypeId:
+        device_type_id:
             type: integer
             nullable: false
             unsigned: false
             id: true
-            column: device_type_id
     fields:
-        pageName:
+        name:
             type: text
             nullable: true
-            length: null
-            fixed: false
             column: page_name
-        editFlg:
-            type: integer
-            nullable: false
+        edit_flg:
+            type: smallint
+            nullable: true
             unsigned: false
-            default: '1'
-            column: edit_flg
+            options:
+                default: '1'
         author:
             type: text
             nullable: true
-            length: null
-            fixed: false
         description:
             type: text
             nullable: true
-            length: null
-            fixed: false
         keyword:
             type: text
             nullable: true
-            length: null
-            fixed: false
-        updateUrl:
+        update_url:
             type: text
             nullable: true
-            length: null
-            fixed: false
-            column: update_url
-        createDate:
+        create_date:
             type: datetime
             nullable: false
-            column: create_date
-        updateDate:
+        update_date:
             type: datetime
             nullable: false
-            column: update_date
-        metaRobots:
+        meta_robots:
             type: text
             nullable: true
-            length: null
-            fixed: false
-            column: meta_robots
-        metaTags:
-            type: text
-            nullable: true
-            length: null
-            fixed: false
-            column: meta_tags
-    oneToOne: 
-        Category: 
-            targetEntity: Eccube\Entity\Category
-            inversedBy: Plugin\SSProductListPage\Entity\ProductListLayout
-            joinColumn:
-                name: page_id
-                referencedColumnName: category_id
-
     oneToMany:
-        BlockPositions:
+        ProductListBlockPositions:
             targetEntity: Plugin\SSProductListPage\Entity\ProductListBlockPosition
             cascade: ["persist", "remove"]
-            mappedBy: PageLayout
+            mappedBy: ProductListLayout
             indexBy: block_id
     manyToOne:
         DeviceType:
             targetEntity: Eccube\Entity\Master\DeviceType
             joinColumn:
                 name: device_type_id
+                referencedColumnName: id
     lifecycleCallbacks: {  }
