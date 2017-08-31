@@ -1,0 +1,94 @@
+Plugin\SSProductListPage\Entity\ProductListLayout: 
+    type: entity
+    table: plg_ss_product_list_layout
+    repositoryClass: Plugin\SSProductListPage\Repository\ProductListLayoutRepository
+    indexes:
+        IDX_F44F6270C4663E4:
+            columns:
+                - page_id
+    id:
+        page_id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+        deviceTypeId:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            column: device_type_id
+    fields:
+        pageName:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            column: page_name
+        editFlg:
+            type: integer
+            nullable: false
+            unsigned: false
+            default: '1'
+            column: edit_flg
+        author:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+        description:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+        keyword:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+        updateUrl:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            column: update_url
+        createDate:
+            type: datetime
+            nullable: false
+            column: create_date
+        updateDate:
+            type: datetime
+            nullable: false
+            column: update_date
+        metaRobots:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            column: meta_robots
+        metaTags:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            column: meta_tags
+    oneToOne: 
+        Product: 
+            targetEntity: Eccube\Entity\Product
+            inversedBy: Plugin\SSProductListPage\Entity\ProductListLayout
+            joinColumn:
+                name: page_id
+                referencedColumnName: product_id
+
+    oneToMany:
+        BlockPositions:
+            targetEntity: Plugin\SSProductListPage\Entity\ProductListBlockPosition
+            cascade: ["persist", "remove"]
+            mappedBy: PageLayout
+            indexBy: block_id
+    manyToOne:
+        DeviceType:
+            targetEntity: Eccube\Entity\Master\DeviceType
+            joinColumn:
+                name: device_type_id
+    lifecycleCallbacks: {  }

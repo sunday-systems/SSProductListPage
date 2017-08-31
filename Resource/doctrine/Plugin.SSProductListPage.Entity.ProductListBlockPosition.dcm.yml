@@ -1,0 +1,54 @@
+Plugin\SSProductListPage\Entity\ProductListBlockPosition: 
+    type: entity
+    table: plg_ss_product_list_block_position
+    repositoryClass: Plugin\SSProductListPage\Repository\ProductListBlockPositionRepository
+    indexes:
+        IDX_E9A4248DC4663E4:
+            columns:
+                - page_id
+        IDX_E9A4248DE9ED820C:
+            columns:
+                - block_id
+    id:
+        page_id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+        target_id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+        block_id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+    fields:
+        blockRow:
+            type: integer
+            nullable: true
+            unsigned: false
+            column: block_row
+        anywhere:
+            type: integer
+            nullable: false
+            unsigned: false
+            default: '0'
+    manyToOne:
+        Block:
+            targetEntity: Eccube\Entity\Block
+            inversedBy: Plugin\SSProductListPage\Entity\ProductListBlockPosition
+            joinColumn:
+                name: block_id
+                referencedColumnName: block_id
+                nullable: false
+        PageLayout:
+            targetEntity: Plugin\SSProductListPage\Entity\ProductListLayout
+            inversedBy: Plugin\SSProductListPage\Entity\ProductListBlockPosition
+            joinColumn:
+                name: page_id
+                referencedColumnName: page_id
+                nullable: false
+    lifecycleCallbacks: {  }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Plugin\SSProductListPageProvider;
+namespace Plugin\SSProductListPage;
 
 use Eccube\Plugin\AbstractPluginManager;
 
