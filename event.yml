@@ -1,6 +1,0 @@
-# TPLを修正
-Admin/Product/category.twig:
-    - [onRenderTplAdminProductCategory, NORMAL]
-    
-front.product.index.initialize:
-    - [onFrontProductIndexInit, NORMAL]
