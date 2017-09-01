@@ -79,7 +79,7 @@ class SSProductListPage {
                         $PageLayout->setDescription($oldPageLayout->getDescription());
                         $PageLayout->setKeyword($oldPageLayout->getKeyword());
                         $PageLayout->setMetaRobots($oldPageLayout->getMetaRobots());
-                        if (function_exists($oldPageLayout, 'getMetaTags')) {
+                        if (method_exists($oldPageLayout, 'getMetaTags')) {
                             $PageLayout->setMetaTags($oldPageLayout->getMetaTags());
                         }
                         
