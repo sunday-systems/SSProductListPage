@@ -20,4 +20,12 @@ class plugin_info{
     static $CLASS_NAME       = "SSProductListPage";
     /** ライセンス */
     static $LICENSE        = "LGPL";
+    
+    /**
+     * フックポイント一覧
+     */
+    static $HOOK_POINTS       = array(
+        array("prefilterTransform", 'prefilterTransform'),
+        array("LC_Page_Admin_Products_Category_action_after", 'pageData'),
+    );
 }
