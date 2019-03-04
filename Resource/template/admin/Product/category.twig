@@ -1,0 +1,38 @@
+{% if Categories|length > 0 %}
+    {% for Category in Categories %}
+        {% if Category.id != TargetCategory.id %}
+
+            <script>
+                $(function () {
+                    $('#category_pc_{{ Category.id }}').appendTo($('#category_{{ Category.id }}_name').closest('form'));
+                    $('#category_mobile_{{ Category.id }}').appendTo($('#category_{{ Category.id }}_name').closest('form'));
+                    $('#category_category_layout_template_{{ Category.id }}').remove();
+                });
+            </script>
+
+            <div id="category_category_layout_template_{{ Category.id }}" style="display: none;">
+
+                <div id="category_pc_{{ Category.id }}" class="col-auto align-items-center" style="width:90%; padding-top: 10px;" >
+                    <div class="row">
+                        <div class="col-3">{{ 'category_layout.admin.category_pc.title'|trans }}</div>
+                        <div class="col-9">
+                            {{ form_widget(forms[Category.id].PcLayout) }}
+                            {{ form_errors(forms[Category.id].PcLayout) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="category_mobile_{{ Category.id }}" class="col-auto align-items-center" style="width:90%; padding-top: 10px;">
+                    <div class="row">
+                        <div class="col-3">{{ 'category_layout.admin.footer_contents.title'|trans }}</div>
+                        <div class="col-9">
+                            {{ form_widget(forms[Category.id].SpLayout) }}
+                            {{ form_errors(forms[Category.id].SpLayout) }}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
