@@ -133,15 +133,13 @@ class SSProductListPageEvent implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @param EventArgs $eventArgs
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function onAdminProductCategoryDelete(EventArgs $eventArgs)
     {
-        /** @var Category $Category */
-        $Category = $eventArgs->getArgument("TargetCategory");
 
-        foreach ($Category->getCategoryLayouts() as $CategoryLayout) {
-            $Category->removeCategoryLayout($CategoryLayout);
-            $this->entityManager->remove($CategoryLayout);
-            $this->entityManager->flush($CategoryLayout);
-        }
     }
 }
