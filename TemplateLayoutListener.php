@@ -8,11 +8,9 @@ use Eccube\Repository\LayoutRepository;
 use Eccube\Request\Context;
 use Plugin\SSProductListPage\Entity\CategoryLayout;
 use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Twig\Environment;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RequestContext;
 
@@ -55,14 +53,19 @@ class TemplateLayoutListener implements EventSubscriberInterface
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
 
+        if ($this->initialized) {
+            return;
+        }
+
         if ($this->requestContext->isAdmin()) {
             return;
         }
 
+        $this->initialized = true;
+
         $request = $event->getRequest();
 
         /** @var \Symfony\Component\HttpFoundation\ParameterBag $attributes */
-        /** @var Page $Page */
         $attributes = $request->attributes;
 
         if ($attributes->get('_route') == "product_list") {
@@ -88,22 +91,6 @@ class TemplateLayoutListener implements EventSubscriberInterface
                 }
             }
         }
-
-
-
-
-        if ($this->initialized) {
-            return;
-        }
-
-        $this->initialized = true;
-
-        if ($this->requestContext->isAdmin()) {
-            return;
-        }
-
-        //$this->twig->addGlobal("Layout", "xx");
-
     }
 
     public static function getSubscribedEvents()

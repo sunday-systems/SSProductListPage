@@ -56,6 +56,7 @@ class SSProductListPageEvent implements EventSubscriberInterface
         return [
             '@admin/Product/category.twig' => ['onTemplateAdminProductCategory', 10],
             EccubeEvents::ADMIN_PRODUCT_CATEGORY_INDEX_COMPLETE => ['onAdminProductCategoryEdit', 10],
+            EccubeEvents::ADMIN_PRODUCT_CATEGORY_DELETE_COMPLETE => ['onAdminProductCategoryDelete', 10],
         ];
     }
 
@@ -129,6 +130,18 @@ class SSProductListPageEvent implements EventSubscriberInterface
 
             $this->entityManager->persist($Category);
             $this->entityManager->flush($Category);
+        }
+    }
+
+    public function onAdminProductCategoryDelete(EventArgs $eventArgs)
+    {
+        /** @var Category $Category */
+        $Category = $eventArgs->getArgument("TargetCategory");
+
+        foreach ($Category->getCategoryLayouts() as $CategoryLayout) {
+            $Category->removeCategoryLayout($CategoryLayout);
+            $this->entityManager->remove($CategoryLayout);
+            $this->entityManager->flush($CategoryLayout);
         }
     }
 }
