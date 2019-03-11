@@ -1,7 +1,7 @@
 {
   "name": "ec-cube/SSProductListPage",
   "version": "0.0.1",
-  "description": "",
+  "description": "商品一覧レイアウトプラグイン",
   "type": "eccube-plugin",
   "require":
   {
