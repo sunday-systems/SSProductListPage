@@ -94,4 +94,14 @@ class CategoryTypeExtension extends AbstractTypeExtension
     {
         return CategoryType::class;
     }
+
+    /**
+     * product admin form name.
+     *
+     * @return string[]
+     */
+    public static function getExtendedTypes(): iterable
+    {
+        yield CategoryType::class;
+    }
 }

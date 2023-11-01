@@ -13,9 +13,9 @@
 
 namespace Plugin\SSProductListPage\Repository;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Eccube\Repository\AbstractRepository;
 use Plugin\SSProductListPage\Entity\CategoryLayout;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * CategoryLayoutRepository
@@ -28,9 +28,9 @@ class CategoryLayoutRepository extends AbstractRepository
     /**
      * CategoryLayoutRepository constructor.
      *
-     * @param RegistryInterface $registry
+     * @param ManagerRegistry $registry
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CategoryLayout::class);
     }

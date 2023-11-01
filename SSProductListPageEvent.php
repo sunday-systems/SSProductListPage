@@ -2,7 +2,7 @@
 
 namespace Plugin\SSProductListPage;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Entity\Category;
 use Eccube\Entity\Layout;
 use Eccube\Event\EccubeEvents;
@@ -13,13 +13,13 @@ use Eccube\Repository\CategoryRepository;
 use Plugin\SSProductListPage\Entity\CategoryLayout;
 use Plugin\SSProductListPage\Repository\CategoryLayoutRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class SSProductListPageEvent implements EventSubscriberInterface
 {
 
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     protected $entityManager;
 
@@ -34,11 +34,11 @@ class SSProductListPageEvent implements EventSubscriberInterface
     protected $categoryRepository;
 
     /**
-     * @var FormFactory
+     * @var FormFactoryInterface
      */
     protected $formFactory;
 
-    public function __construct(EntityManager $entityManager, CategoryLayoutRepository $categoryLayoutRepository, CategoryRepository $categoryRepository, FormFactory $formFactory)
+    public function __construct(EntityManagerInterface $entityManager, CategoryLayoutRepository $categoryLayoutRepository, CategoryRepository $categoryRepository, FormFactoryInterface $formFactory)
     {
         $this->entityManager = $entityManager;
         $this->categoryLayoutRepository = $categoryLayoutRepository;
